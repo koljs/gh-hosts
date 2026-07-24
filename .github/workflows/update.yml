@@ -5,18 +5,21 @@ on:
   schedule:
     - cron: "0 0 * * *"
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12]
+        node-version: [22]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -37,17 +40,4 @@ jobs:
         run: exit 1
 
       - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-     
-  git-mirror:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: wearerequired/git-mirror-action@v1
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        with:
-          source-repo: 'git@github.com:fliu2476/gh-hosts.git'
-          destination-repo: 'git@gitee.com:fliu2476/github-hosts.git'
+        run: git push
