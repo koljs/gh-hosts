@@ -41,14 +41,3 @@ jobs:
 
       - name: Push changes
         run: git push
-     
-  git-mirror:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: wearerequired/git-mirror-action@v1
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        with:
-          source-repo: 'git@github.com:fliu2476/gh-hosts.git'
-          destination-repo: 'git@gitee.com:fliu2476/github-hosts.git'
